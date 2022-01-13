@@ -12,8 +12,6 @@
 python DllJacking_Python.py 目标文件夹
 ```
 
-
-
 思路：
 
 1. 目标文件夹所有签名过的exe文件复制到当前exe目录下
@@ -22,3 +20,16 @@ python DllJacking_Python.py 目标文件夹
 4. 根据检测前后“dlljacking.txt”的大小，来判断是否有新的成果
 5. 整理“dlljacking.txt”的内容输出为“result.txt”
 
+编译后，按以下结构放置：
+```
+│-bDLL.py
+│
+└─bin
+        aDLL32.exe
+        aDLL64.exe
+        arch.exe
+        Hook32.dll
+        Hook64.dll
+        informer32.dll
+        informer64.dll
+```
