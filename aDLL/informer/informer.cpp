@@ -82,11 +82,11 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 	case DLL_PROCESS_ATTACH: {
 
 		WCHAR  DllPath[MAX_PATH] = { 0 };
-		TCHAR  exename[1024];
+		TCHAR  ExePath[1024];
 		CHAR   read[MAX_PATH] = { 0 };
 		std::string flag;
 		//get exe path
-		GetModuleFileName(NULL, exename, 1024);
+		GetModuleFileName(NULL, ExePath, 1024);
 		//MessageBox(NULL, filename, L"exe name", MB_ICONINFORMATION);
 
 		//get dll path
@@ -97,17 +97,18 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 		flag = Exists_Dll(TCHAR2STRING(DllPath));
 
 		//write in txt
-		ofstream outfile("dlljacking.txt", ios::app);
-		outfile << "exe: " << TCHAR2STRING(exename) << "\r\ndll: " << TCHAR2STRING(DllPath) + flag << "\r\n\r\n";
+		string ExePath_Str = TCHAR2STRING(ExePath);
+		string::size_type iPos = ExePath_Str.find_last_of('\\') + 1;
+		string TempFilePath = ExePath_Str.substr(0, iPos);
+		ofstream outfile(TempFilePath +"..\\dlljacking.txt", ios::app);
+		outfile << "exe: " << ExePath_Str << "\r\ndll: " << TCHAR2STRING(DllPath) + flag << "\r\n\r\n";
 		outfile.close();
 
 		//copyfile
-		string copypath1 = TCHAR2STRING(exename);
-		string copypath2 = "Goodexe\\";
-		string::size_type iPos = copypath1.find_last_of('\\') + 1;
-		string filename = copypath1.substr(iPos, copypath1.length() - iPos);
-		copypath2 += filename;
-		copyFile(copypath1, copypath2);
+		string GoodExePath = TempFilePath + "..\\Goodexe\\";
+		string ExeName = ExePath_Str.substr(iPos, ExePath_Str.length() - iPos);
+		GoodExePath += ExeName;
+		copyFile(ExePath_Str, GoodExePath);
 		exit(0);
 		break;
 	}
