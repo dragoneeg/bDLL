@@ -36,3 +36,10 @@ python DllJacking_Python.py 目标文件夹
         informer32.dll
         informer64.dll
 ```
+## Log
+### v0.2.0
+替换arch模块
+
+### v0.2.1
+Add Deduplication result
+添加结果去重功能
