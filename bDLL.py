@@ -16,7 +16,7 @@ archexe = r"bin\arch.exe "
 # 拷贝所有exe到指定目录
 def copyexe(dirpath):
     listexe(dirpath)
-    print("[+] Copy cer_exe from "+dirpath+"to exe\\")
+    print("[+] Copy cer_exe from "+dirpath+" to exe\\")
     for filepath in filepaths:
         if is_cer(filepath):
             shutil.copyfile(filepath,"exe\\"+os.path.basename(filepath)) 
@@ -58,18 +58,36 @@ def arch(Exepath):
 
 # 整理结果
 def add_arch(txtpath):
-    print("\r\n[+] Good job.Formating result")
-    with open(result, 'w+') as f2:
-        with open(txtpath,'r',encoding='utf-8') as f1:
-            for line in f1:
+    Deduplication(txtpath)
+    print("\r\nFormating result")
+    with open(result, 'w+') as File_Result:
+        with open(txtpath,'r',encoding='utf-8') as File_Temp:
+            for line in File_Temp:
                 # print(line)
                 if "exe: " in line:
                     goodexepath = line.strip("\t\r\n").replace("exe: ","")
-                    line = line.strip("\t\r\n")+" ("+arch(goodexepath)+")\n"
+                    line = line.strip("\t\r\n")+" ("+arch(goodexepath)+")"
                     # print(line)
-                f2.write(line)
-        f1.close()
-    f2.close()
+                File_Result.write(line)
+        File_Temp.close()
+    File_Result.close()
+    os.remove(txtpath)
+
+# 去重复数据
+def Deduplication(txtpath):
+    print("\r\n[+] Good job.Deduplication result")
+    Temp_Result = []
+    Str_temp = open(txtpath,'r',encoding='utf-8').read()
+    Str_temp = Str_temp.split("\n\n\n\n")
+    for line in Str_temp:
+        if line not in Temp_Result:
+            Temp_Result.append(line)
+    os.remove(txtpath)
+
+    with open(txtpath, 'w+') as File_Temp2:
+        for line in Temp_Result:
+            File_Temp2.write(line+"\n\n")
+    File_Temp2.close()
 
 if __name__ == '__main__':
     # os.chdir("bin\\")
@@ -114,10 +132,8 @@ if __name__ == '__main__':
     fsize2 = os.path.getsize(temp) if  os.path.exists(temp) else 0
     if fsize2-fsize :
         add_arch(temp)
-        os.remove(temp)
         os.system("type "+result)
     else:
         print("\r\n[!] not good")
     time.sleep(5)
     shutil.rmtree(r"exe")
-
